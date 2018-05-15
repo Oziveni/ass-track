@@ -6,6 +6,8 @@ python: 3.6
 before_install:
   - cp .env.ci .env
   - mkdir -p build
+  - mkdir -p build/static
+  - cp static/main.css build/static/main.css
 install:
   - pip install -r requirements.txt
 script:
