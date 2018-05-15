@@ -20,4 +20,4 @@ deploy:
   keep-history: true
   local-dir: build
   on:
-    branch: travis
+    branch: master
