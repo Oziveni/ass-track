@@ -1,9 +1,10 @@
 from flask import Flask, jsonify, render_template
 import db
+import sys
 
 app = Flask(__name__)
 
-@app.route('/last')
+@app.route('/last.json')
 def last():
     last_snapshot = db.get_last_snapshot()
     return jsonify(last_snapshot["members"])
@@ -19,4 +20,10 @@ def format_datetime(value):
 app.jinja_env.filters['datetime'] = format_datetime
 
 if __name__ == '__main__':
-    app.run()
+    if((len(sys.argv) > 1) and (sys.argv[1] == "dump")):
+        print("* dumping index.html")
+        open("build/index.html", "w+").write(app.test_client().get('/').get_data().decode("utf-8"))
+        print("* dumping last.json")
+        open("build/last.json", "w+").write(app.test_client().get('/last.json').get_data().decode("utf-8"))
+    else:
+        app.run()
