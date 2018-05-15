@@ -1,6 +1,8 @@
 from flask import Flask, jsonify, render_template
 import db
 import sys
+import pytz
+
 
 app = Flask(__name__)
 
@@ -15,7 +17,8 @@ def home():
     return render_template('home.html', snapshot = last_snapshot)
 
 def format_datetime(value):
-    return value.strftime('%-d.%-m.%Y %-H:%M')
+    timezoneLocal = pytz.timezone('Europe/Prague')
+    return pytz.utc.localize(value).astimezone(timezoneLocal).strftime('%-d.%-m.%Y %-H:%M')
 
 app.jinja_env.filters['datetime'] = format_datetime
 
