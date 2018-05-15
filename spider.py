@@ -2,6 +2,7 @@ import datetime
 import logging
 import re
 import requests
+import grequests
 from bs4 import BeautifulSoup
 
 import config
@@ -9,11 +10,11 @@ import config
 def replace_nbsp (string):
     return string.replace(u"\xa0", " ")
 
-def scrap_member (url):
-    member_page = requests.get(url)
+def scrap_member (member_page):
+    DOMAIN = "http://www.psp.cz/sqw/"
     member_soup = BeautifulSoup(member_page.content, "html.parser", from_encoding="windows-1250")
     member = {
-        "id": re.search("id=(.*)", url).group(1),
+        "id": re.search("id=(.*)", member_page.url).group(1),
         "name": replace_nbsp(member_soup.h1.string),
         "assistants": [],
     }
@@ -21,7 +22,7 @@ def scrap_member (url):
         member["address"] = replace_nbsp(member_soup.address.get_text())
     for assistant in member_soup.select("ul.assistants li strong"):
         member["assistants"].append(replace_nbsp(assistant.string))
-    logging.debug("Scrapped member " + member["name"] + " from " + url)
+    logging.debug("Scrapped member " + member["name"] + " from " + member_page.url)
     return member
 
 def scrap_snapshot ():
@@ -34,7 +35,9 @@ def scrap_snapshot ():
     }
     links = list_soup.select(".person-list .name a")
     links = links if config.IS_PRODUCTION else links[0:3]
-    for link in links:
-        snapshot["members"].append(scrap_member(DOMAIN + link["href"]))
+    rs = (grequests.get(DOMAIN + link["href"]) for link in links)
+    rs = grequests.map(rs, size=20)
+    for r in rs:
+        snapshot["members"].append(scrap_member(r))
     logging.info("Scrapped " + str(len(snapshot["members"])) + " members.")
     return snapshot
