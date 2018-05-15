@@ -1,4 +1,7 @@
 language: python
+cache: pip
+services:
+  - mongodb
 python: 3.6
 before_install:
   - cp .env.ci .env
