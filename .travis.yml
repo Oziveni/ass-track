@@ -13,14 +13,6 @@ install:
 script:
   - python scrap.py
   - python web.py dump
-deploy:
-  provider: pages
-  skip-cleanup: true
-  github-token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
-  keep-history: true
-  local-dir: build
-  on:
-    branch: master
 after_success:
    - "curl -T build/index.html -u $FTP_USER:$FTP_PASSWORD ftp://$FTP_HOST/index.html"
    - "curl -T build/last.json -u $FTP_USER:$FTP_PASSWORD ftp://$FTP_HOST/last.json"
