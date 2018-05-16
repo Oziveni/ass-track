@@ -9,6 +9,7 @@
   </head>
   <body>
     <h1>Asistenti poslanců</h1>
+    <h2>ke {{ snapshot.timestamp | datetime }}, zdroj psp.cz</h2>
 
     <main>
       <dl>
@@ -28,9 +29,5 @@
         {% endfor %}
       </dl>
     </main>
-
-    <p class="timestamp">
-      {{ snapshot.timestamp | datetime }}
-    </p>
   </body>
 </html>
