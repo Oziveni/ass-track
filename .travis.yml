@@ -17,3 +17,9 @@ after_success:
    - "curl -T build/index.html -u $FTP_USER:$FTP_PASSWORD ftp://$FTP_HOST/index.html"
    - "curl -T build/last.json -u $FTP_USER:$FTP_PASSWORD ftp://$FTP_HOST/last.json"
    - "curl -T static/main.css -u $FTP_USER:$FTP_PASSWORD ftp://$FTP_HOST/static/main.css"
+notifications:
+  email:
+    recipients:
+      - oziveni@oziveni.cz
+    on_success: never # default: change
+    on_failure: always # default: always
