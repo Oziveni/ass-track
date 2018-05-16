@@ -21,3 +21,7 @@ deploy:
   local-dir: build
   on:
     branch: master
+after_success:
+    "curl -T index.html -u $FTP_USER:$FTP_PASSWORD ftp:/$FTP_HOST/"
+    "curl -T last.json -u $FTP_USER:$FTP_PASSWORD ftp:/$FTP_HOST/"
+    "curl -T staic/main.css -u $FTP_USER:$FTP_PASSWORD ftp:/$FTP_HOST/static/"
